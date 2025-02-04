@@ -23,8 +23,8 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import {
   Habilitation,
-  StatusHabiliation,
-} from '@/shared/modules/api_depot/types/habilitation.type';
+  StatusHabilitationEnum,
+} from '@/shared/modules/api_depot/api-depot.types';
 import { add } from 'date-fns';
 import { MailerModule } from '@/shared/test/mailer.module.test';
 import { Repository } from 'typeorm';
@@ -128,8 +128,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.ACCEPTED,
+        id: habilitationId,
+        status: StatusHabilitationEnum.ACCEPTED,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -161,8 +161,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.ACCEPTED,
+        id: habilitationId,
+        status: StatusHabilitationEnum.ACCEPTED,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -222,8 +222,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.ACCEPTED,
+        id: habilitationId,
+        status: StatusHabilitationEnum.ACCEPTED,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -242,7 +242,7 @@ describe('HABILITATION MODULE', () => {
       );
 
       const updatedBAL = await balRepository.findOneBy({ id: balId });
-      expect(updatedBAL.habilitationId).toBe(habilitation._id);
+      expect(updatedBAL.habilitationId).toBe(habilitation.id);
     });
 
     it('expect 412 BAL already has habilitation', async () => {
@@ -258,8 +258,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.ACCEPTED,
+        id: habilitationId,
+        status: StatusHabilitationEnum.ACCEPTED,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -295,8 +295,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.PENDING,
+        id: habilitationId,
+        status: StatusHabilitationEnum.PENDING,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -334,8 +334,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.ACCEPTED,
+        id: habilitationId,
+        status: StatusHabilitationEnum.ACCEPTED,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -371,8 +371,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.PENDING,
+        id: habilitationId,
+        status: StatusHabilitationEnum.PENDING,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -408,8 +408,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.PENDING,
+        id: habilitationId,
+        status: StatusHabilitationEnum.PENDING,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',
@@ -455,8 +455,8 @@ describe('HABILITATION MODULE', () => {
       });
 
       const habilitation: Habilitation = {
-        _id: habilitationId,
-        status: StatusHabiliation.REJECTED,
+        id: habilitationId,
+        status: StatusHabilitationEnum.REJECTED,
         expiresAt: add(new Date(), { months: 1 }),
         codeCommune: commune,
         emailCommune: 'test@test.fr',

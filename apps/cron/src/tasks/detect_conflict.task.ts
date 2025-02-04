@@ -8,7 +8,7 @@ import {
   StatusBaseLocalEnum,
 } from '@/shared/entities/base_locale.entity';
 import { ApiDepotService } from '@/shared/modules/api_depot/api_depot.service';
-import { Revision } from '@/shared/modules/api_depot/types/revision.type';
+import { Revision } from '@/shared/modules/api_depot/api-depot.types';
 
 import { Task } from '../task_queue.class';
 import { CacheService } from '@/shared/modules/cache/cache.service';
@@ -89,7 +89,7 @@ export class DetectConflictTask implements Task {
     }
 
     for (const baseLocale of basesLocales) {
-      if (currentRevision._id === baseLocale.sync.lastUploadedRevisionId) {
+      if (currentRevision.id === baseLocale.sync.lastUploadedRevisionId) {
         await this.basesLocalesRepository
           .createQueryBuilder('bases_locales')
           .update(BaseLocale)

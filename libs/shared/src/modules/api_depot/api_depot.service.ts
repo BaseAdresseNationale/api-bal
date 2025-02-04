@@ -4,9 +4,8 @@ import { AxiosError } from 'axios';
 import { of, catchError, firstValueFrom } from 'rxjs';
 import * as hasha from 'hasha';
 
-import { Habilitation } from './types/habilitation.type';
+import { Habilitation, Revision } from './api-depot.types';
 import { BaseLocale } from '@/shared/entities/base_locale.entity';
-import { Revision } from '@/shared/modules/api_depot/types/revision.type';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -150,8 +149,8 @@ export class ApiDepotService {
     habilitationId: string,
   ) {
     const revision: Revision = await this.createRevision(codeCommune, balId);
-    await this.uploadFileRevision(revision._id, balFile);
-    const computedRevision: Revision = await this.computeRevision(revision._id);
+    await this.uploadFileRevision(revision.id, balFile);
+    const computedRevision: Revision = await this.computeRevision(revision.id);
 
     if (!computedRevision.validation.valid) {
       this.logger.warn(
@@ -164,7 +163,7 @@ export class ApiDepotService {
       );
     }
     const publishedRevision: Revision = await this.publishRevision(
-      computedRevision._id,
+      computedRevision.id,
       habilitationId,
     );
     return publishedRevision;

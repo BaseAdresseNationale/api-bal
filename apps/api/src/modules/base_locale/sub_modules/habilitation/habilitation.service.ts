@@ -3,8 +3,8 @@ import { ObjectId } from 'mongodb';
 
 import {
   Habilitation,
-  StatusHabiliation,
-} from '@/shared/modules/api_depot/types/habilitation.type';
+  StatusHabilitationEnum,
+} from '@/shared/modules/api_depot/api-depot.types';
 import { ApiDepotService } from '@/shared/modules/api_depot/api_depot.service';
 import { BaseLocale } from '@/shared/entities/base_locale.entity';
 import { BaseLocaleService } from '../../base_locale.service';
@@ -66,7 +66,7 @@ export class HabilitationService {
     }
 
     // On verifie que l'habilitation est valide
-    if (habilitation.status !== StatusHabiliation.ACCEPTED) {
+    if (habilitation.status !== StatusHabilitationEnum.ACCEPTED) {
       return false;
     }
     // On verifie que l'habilitation n'est pas expirée
@@ -86,7 +86,10 @@ export class HabilitationService {
       const now = new Date();
       const { status, expiresAt } = habilitation;
 
-      if (status === StatusHabiliation.ACCEPTED && new Date(expiresAt) > now) {
+      if (
+        status === StatusHabilitationEnum.ACCEPTED &&
+        new Date(expiresAt) > now
+      ) {
         throw new HttpException(
           'Cette Base Adresse Locale possède déjà une habilitation',
           HttpStatus.PRECONDITION_FAILED,
@@ -116,7 +119,7 @@ export class HabilitationService {
 
   async sendPinCode(habilitationId: string): Promise<void> {
     const habilitation: Habilitation = await this.findOne(habilitationId);
-    if (habilitation.status !== StatusHabiliation.PENDING) {
+    if (habilitation.status !== StatusHabilitationEnum.PENDING) {
       throw new HttpException(
         'Aucune demande d’habilitation en attente',
         HttpStatus.PRECONDITION_FAILED,
@@ -141,7 +144,7 @@ export class HabilitationService {
   async validatePinCode(habilitationId: string, code: string): Promise<any> {
     const habilitation: Habilitation = await this.findOne(habilitationId);
 
-    if (habilitation.status !== StatusHabiliation.PENDING) {
+    if (habilitation.status !== StatusHabilitationEnum.PENDING) {
       throw new HttpException(
         'Aucune demande d’habilitation en attente',
         HttpStatus.PRECONDITION_FAILED,

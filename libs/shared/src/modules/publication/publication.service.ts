@@ -6,10 +6,11 @@ import { ConfigService } from '@nestjs/config';
 import * as hasha from 'hasha';
 
 import {
+  Revision,
   Habilitation,
-  StatusHabiliation,
-} from '@/shared/modules/api_depot/types/habilitation.type';
-import { Revision } from '@/shared/modules/api_depot/types/revision.type';
+  StatusHabilitationEnum,
+  TypeFileEnum,
+} from '@/shared/modules/api_depot/api-depot.types';
 import {
   BaseLocale,
   StatusBaseLocalEnum,
@@ -76,7 +77,7 @@ export class PublicationService {
     }
 
     // On verifie que l'habilitation est valide
-    if (habilitation.status !== StatusHabiliation.ACCEPTED) {
+    if (habilitation.status !== StatusHabilitationEnum.ACCEPTED) {
       await this.pause(balId);
       throw new HttpException(
         'L’habilitation rattachée n’est pas une habilitation valide',
@@ -137,7 +138,7 @@ export class PublicationService {
         },
       });
 
-      return this.markAsSynced(baseLocale, publishedRevision._id);
+      return this.markAsSynced(baseLocale, publishedRevision.id);
     }
 
     const sync = await this.updateSyncInfo(baseLocale);
@@ -156,7 +157,7 @@ export class PublicationService {
         await this.apiDepotService.getCurrentRevision(codeCommune);
       // On récupère le fichier BAL de la révision courante
       const currentRevisionBalFile = currentRevision?.files.find(
-        (f) => f.type === 'bal',
+        (f) => f.type === TypeFileEnum.BAL,
       );
       // On traite si le hash du fichier BAL CSV est différent du fichier de la révision courante
       // Cela veut dire qu'il y a eu un changement dans le fichier
@@ -169,7 +170,7 @@ export class PublicationService {
           baseLocale.habilitationId,
         );
         // On marque le sync de la BAL en published
-        return this.markAsSynced(baseLocale, publishedRevision._id);
+        return this.markAsSynced(baseLocale, publishedRevision.id);
       }
 
       // On marque le sync de la BAL en published
@@ -273,7 +274,7 @@ export class PublicationService {
 
     // On vérifie si la dernière publication de la BAL est la révision courante
     if (
-      currentRevision?._id !== baseLocale.sync.lastUploadedRevisionId.toString()
+      currentRevision?.id !== baseLocale.sync.lastUploadedRevisionId.toString()
     ) {
       return this.updateSync(baseLocale, {
         status: StatusSyncEnum.CONFLICT,

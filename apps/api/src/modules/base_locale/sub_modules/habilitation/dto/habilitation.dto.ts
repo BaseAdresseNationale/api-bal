@@ -1,14 +1,14 @@
 import {
-  EmailStrategy,
-  FranceConnectStrategy,
+  Strategy,
   Habilitation,
-  StatusHabiliation,
-} from '@/shared/modules/api_depot/types/habilitation.type';
+  StatusHabilitationEnum,
+  TypeStrategyEnum,
+} from '@/shared/modules/api_depot/api-depot.types';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class Strategy {
-  @ApiProperty({ enum: ['email', 'franceconnect'] })
-  type: 'email' | 'franceconnect';
+export class StrategyDTO {
+  @ApiProperty({ enum: TypeStrategyEnum })
+  type: TypeStrategyEnum;
 
   @ApiProperty()
   pinCode: string;
@@ -25,7 +25,7 @@ export class Strategy {
 
 export class HabilitationDTO implements Habilitation {
   @ApiProperty()
-  _id: string;
+  id: string;
 
   @ApiProperty()
   codeCommune: string;
@@ -36,14 +36,14 @@ export class HabilitationDTO implements Habilitation {
   @ApiProperty()
   franceconnectAuthenticationUrl?: string;
 
-  @ApiProperty({ type: () => Strategy })
-  strategy?: EmailStrategy | FranceConnectStrategy;
+  @ApiProperty({ type: () => StrategyDTO })
+  strategy?: Strategy;
 
   @ApiProperty()
   client?: string;
 
-  @ApiProperty({ enum: StatusHabiliation })
-  status: StatusHabiliation;
+  @ApiProperty({ enum: StatusHabilitationEnum })
+  status: StatusHabilitationEnum;
 
   @ApiProperty()
   createdAt?: Date;
