@@ -31,6 +31,15 @@ export class Toponyme extends GlobalEntity {
   nomAlt: Record<string, string> | null;
 
   @ApiProperty()
+  @Column('varchar', {
+    name: 'commune_deleguee',
+    default: null,
+    nullable: true,
+    length: 5,
+  })
+  communeDeleguee: string | null;
+
+  @ApiProperty()
   @Column('text', { nullable: true, array: true })
   parcelles?: string[] | null;
 

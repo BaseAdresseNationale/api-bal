@@ -66,6 +66,15 @@ export class Numero extends GlobalEntity {
   @Column('boolean', { nullable: false, default: false })
   certifie?: boolean;
 
+  @ApiProperty()
+  @Column('varchar', {
+    name: 'commune_deleguee',
+    default: null,
+    nullable: true,
+    length: 5,
+  })
+  communeDeleguee: string | null;
+
   @ApiProperty({ type: () => Position, isArray: true })
   @OneToMany(() => Position, (position) => position.numero, {
     eager: true,

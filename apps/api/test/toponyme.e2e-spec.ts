@@ -234,6 +234,7 @@ describe('TOPONYME MODULE', () => {
         nomAlt: null,
         parcelles: ['12345000AA0002', '12345000AA0005'],
         positions: [createPositions()],
+        communeDeleguee: '08294',
       };
 
       const response = await request(app.getHttpServer())
@@ -245,6 +246,7 @@ describe('TOPONYME MODULE', () => {
       expect(response.body.id).toEqual(toponymeId);
       expect(response.body.balId).toEqual(balId);
       expect(response.body.nom).toEqual('coucou');
+      expect(response.body.communeDeleguee).toEqual('08294');
       expect(response.body.parcelles).toEqual([
         '12345000AA0002',
         '12345000AA0005',
@@ -253,6 +255,26 @@ describe('TOPONYME MODULE', () => {
 
       const bal = await balRepository.findOneBy({ id: balId });
       expect(bal.updatedAt.toISOString()).not.toEqual(updatedAt.toISOString());
+    });
+
+    it('Return 400 bad communeDeleguee', async () => {
+      const balId = await createBal({ nom: 'bal', commune: '08053' });
+      const toponymeId = await createToponyme(balId, {
+        nom: 'rue de la paix',
+      });
+      const changes: UpdateToponymeDTO = {
+        nom: 'coucou',
+        nomAlt: null,
+        communeDeleguee: '91400',
+        parcelles: ['12345000AA0002', '12345000AA0005'],
+        positions: [createPositions()],
+      };
+
+      await request(app.getHttpServer())
+        .put(`/toponymes/${toponymeId}`)
+        .send(changes)
+        .set('authorization', `Bearer ${token}`)
+        .expect(400);
     });
 
     it('Return 403', async () => {

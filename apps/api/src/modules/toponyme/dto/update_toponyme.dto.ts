@@ -9,6 +9,7 @@ import {
 
 import { ValidatorBal } from '@/shared/validators/validator_bal.validator';
 import { Position } from '@/shared/entities/position.entity';
+import { ValidatorCogCommune } from '@/shared/validators/cog.validator';
 
 export class UpdateToponymeDTO {
   @IsOptional()
@@ -21,6 +22,10 @@ export class UpdateToponymeDTO {
   @Validate(ValidatorBal, ['langAlt'])
   @ApiProperty({ required: false, nullable: true })
   nomAlt: Record<string, string>;
+
+  @Validate(ValidatorCogCommune, ['commune_deleguee'])
+  @ApiProperty({ required: false, nullable: true })
+  communeDeleguee?: string;
 
   @IsOptional()
   @Validate(ValidatorBal, ['cad_parcelles'])

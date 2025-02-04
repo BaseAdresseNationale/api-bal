@@ -210,6 +210,7 @@ export class NumeroService {
         }),
         parcelles: rawNumero.parcelles || [],
         certifie: rawNumero.certifie || false,
+        communeDeleguee: rawNumero.communeDeleguee,
         ...(rawNumero.updatedAt && { updatedAt: rawNumero.updatedAt }),
         ...(rawNumero.createdAt && { createdAt: rawNumero.createdAt }),
       }));
@@ -282,6 +283,7 @@ export class NumeroService {
       comment: createNumeroDto.comment || null,
       parcelles: createNumeroDto.parcelles || [],
       certifie: createNumeroDto.certifie || false,
+      communeDeleguee: createNumeroDto.communeDeleguee || null,
     };
     // Créer l'entité typeorm
     const entityToSave: Numero = this.numerosRepository.create(numero);
@@ -435,7 +437,7 @@ export class NumeroService {
       ...(changes.toponymeId !== undefined && {
         toponymeId: changes.toponymeId,
       }),
-      ...pick(changes, ['comment', 'certifie']),
+      ...pick(changes, ['comment', 'certifie', 'communeDeleguee']),
     };
     // Si le positionType est changé, on change le type de la première position dans le batch
     let positionTypeAffected: number = 0;

@@ -199,7 +199,7 @@ describe('VOIE MODULE', () => {
 
   describe('POST /voies/numeros', () => {
     it('Create 201 numero', async () => {
-      const balId = await createBal({ nom: 'bal', commune: '91400' });
+      const balId = await createBal({ nom: 'bal', commune: '08053' });
       const voieId = await createVoie(balId, { nom: 'rue de la paix' });
       const createdNumero: CreateNumeroDTO = {
         numero: 1,
@@ -213,6 +213,7 @@ describe('VOIE MODULE', () => {
             },
           },
         ],
+        communeDeleguee: '08294',
       };
 
       const response = await request(app.getHttpServer())
@@ -233,6 +234,7 @@ describe('VOIE MODULE', () => {
       expect(response.body.updatedAt).not.toEqual(updatedAt.toISOString());
       expect(response.body.createdAt).not.toEqual(createdAt.toISOString());
       expect(response.body.deletedAt).toEqual(null);
+      expect(response.body.communeDeleguee).toEqual('08294');
 
       const voieAfter: Voie = await voieRepository.findOneBy({ id: voieId });
       const balAfter: BaseLocale = await balRepository.findOneBy({ id: balId });

@@ -195,7 +195,7 @@ describe('BASE LOCAL MODULE', () => {
 
   describe('PUT /bases-locales/numeros/batch', () => {
     it('Batch 200 numeros change voie', async () => {
-      const balId = await createBal({ nom: 'bal', commune: '91400' });
+      const balId = await createBal({ nom: 'bal', commune: '08053' });
       const voieId1 = await createVoie(balId, { nom: 'rue de la paix' });
       const toponymeId1 = await createToponyme(balId, {
         nom: 'allée',
@@ -209,11 +209,13 @@ describe('BASE LOCAL MODULE', () => {
         numero: 99,
         toponymeId: toponymeId1,
         positions: [createPositions()],
+        communeDeleguee: '08294',
       });
       const numeroId2 = await createNumero(balId, voieId2, {
         numero: 99,
         toponymeId: toponymeId2,
         positions: [createPositions()],
+        communeDeleguee: '08294',
       });
       const updateBtach: UpdateBatchNumeroDTO = {
         numerosIds: [numeroId1, numeroId2],
@@ -223,6 +225,7 @@ describe('BASE LOCAL MODULE', () => {
           positionType: PositionTypeEnum.DELIVRANCE_POSTALE,
           certifie: true,
           comment: 'coucou',
+          communeDeleguee: '08053',
         },
       };
       const response = await request(app.getHttpServer())
@@ -238,6 +241,7 @@ describe('BASE LOCAL MODULE', () => {
         positionType: PositionTypeEnum.DELIVRANCE_POSTALE,
         certifie: true,
         comment: 'coucou',
+        communeDeleguee: '08053',
       });
 
       const numero1After: Numero = await numeroRepository.findOneBy({
@@ -250,6 +254,7 @@ describe('BASE LOCAL MODULE', () => {
       );
       expect(numero1After.certifie).toBeTruthy();
       expect(numero1After.comment).toEqual('coucou');
+      expect(numero1After.communeDeleguee).toEqual('08053');
 
       const numero2After: Numero = await numeroRepository.findOneBy({
         id: numeroId2,
@@ -261,6 +266,7 @@ describe('BASE LOCAL MODULE', () => {
       );
       expect(numero2After.certifie).toBeTruthy();
       expect(numero2After.comment).toEqual('coucou');
+      expect(numero2After.communeDeleguee).toEqual('08053');
 
       const voie1After: Voie = await voieRepository.findOneBy({ id: voieId1 });
       expect(voie1After.updatedAt).not.toEqual(updatedAt.toISOString());
@@ -522,7 +528,7 @@ describe('BASE LOCAL MODULE', () => {
 
   describe('GET /bases-locales/csv', () => {
     it('GET CSV 200', async () => {
-      const balId = await createBal({ nom: 'bal', commune: '91534' });
+      const balId = await createBal({ nom: 'bal', commune: '08053' });
       const { banId: communeUuid } = await balRepository.findOneBy({
         id: balId,
       });
@@ -540,6 +546,7 @@ describe('BASE LOCAL MODULE', () => {
       });
       const toponymeId1 = await createToponyme(balId, {
         nom: 'allée',
+        communeDeleguee: '08294',
       });
       const { banId: toponymeUuid1 } = await toponymeRepository.findOneBy({
         id: toponymeId1,
@@ -550,6 +557,7 @@ describe('BASE LOCAL MODULE', () => {
         positions: [createPositions()],
         toponymeId: toponymeId1,
         certifie: true,
+        communeDeleguee: '08053',
       });
       const { banId: numeroUuid1 } = await numeroRepository.findOneBy({
         id: numeroId1,
@@ -560,6 +568,7 @@ describe('BASE LOCAL MODULE', () => {
         positions: [createPositions()],
         toponymeId: toponymeId1,
         certifie: false,
+        communeDeleguee: '08294',
       });
       const { banId: numeroUuid2 } = await numeroRepository.findOneBy({
         id: numeroId2,
@@ -578,10 +587,10 @@ describe('BASE LOCAL MODULE', () => {
       expect(response.headers['content-type']).toEqual(
         'text/csv; charset=utf-8',
       );
-      const csvFile = `cle_interop;id_ban_commune;id_ban_toponyme;id_ban_adresse;voie_nom;lieudit_complement_nom;numero;suffixe;certification_commune;commune_insee;commune_nom;position;long;lat;x;y;cad_parcelles;source;date_der_maj
-    91534_xxxx_00001_bis;${communeUuid};${voieUuid1};${numeroUuid1};rue de la paix;allée;1;bis;1;91534;Saclay;entrée;8;42;1114835.92;6113076.85;;ban;2000-01-02
-    91534_xxxx_00001_ter;${communeUuid};${voieUuid2};${numeroUuid2};rue de paris;allée;1;ter;0;91534;Saclay;entrée;8;42;1114835.92;6113076.85;;ban;2000-01-02
-    91534_xxxx_99999;${communeUuid};${toponymeUuid1};;allée;;99999;;;91534;Saclay;;;;;;;commune;2000-01-02`;
+      const csvFile = `cle_interop;id_ban_commune;id_ban_toponyme;id_ban_adresse;voie_nom;lieudit_complement_nom;numero;suffixe;certification_commune;commune_insee;commune_nom;commune_deleguee_insee;commune_deleguee_nom;position;long;lat;x;y;cad_parcelles;source;date_der_maj
+    08053_xxxx_00001_bis;${communeUuid};${voieUuid1};${numeroUuid1};rue de la paix;allée;1;bis;1;08053;Bazeilles;08053;Bazeilles;entrée;8;42;1114835.92;6113076.85;;ban;2000-01-02
+    08053_xxxx_00001_ter;${communeUuid};${voieUuid2};${numeroUuid2};rue de paris;allée;1;ter;0;08053;Bazeilles;08294;La Moncelle;entrée;8;42;1114835.92;6113076.85;;ban;2000-01-02
+    08053_xxxx_99999;${communeUuid};${toponymeUuid1};;allée;;99999;;;08053;Bazeilles;08294;La Moncelle;;;;;;;commune;2000-01-02`;
       expect(response.text.replace(/\s/g, '')).toEqual(
         csvFile.replace(/\s/g, ''),
       );

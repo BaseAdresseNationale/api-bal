@@ -196,7 +196,7 @@ describe('NUMERO', () => {
 
   describe('PUT /numero', () => {
     it('Update 200 numero', async () => {
-      const balId = await createBal({ nom: 'bal', commune: '91400' });
+      const balId = await createBal({ nom: 'bal', commune: '08053' });
       const voieId = await createVoie(balId, { nom: 'rue de la paix' });
       const numeroId = await createNumero(balId, voieId, {
         numero: 99,
@@ -204,6 +204,7 @@ describe('NUMERO', () => {
 
       const updatedNumero: UpdateNumeroDTO = {
         numero: 100,
+        communeDeleguee: '08294',
       };
 
       const response = await request(app.getHttpServer())
@@ -218,6 +219,7 @@ describe('NUMERO', () => {
       expect(response.body.voieId).toEqual(voieId);
       expect(response.body.parcelles).toBeNull();
       expect(response.body.positions).toEqual([]);
+      expect(response.body.communeDeleguee).toEqual('08294');
 
       const voieDbAfter = await voieRepository.findOneBy({ id: voieId });
       const balDbAfter = await balRepository.findOneBy({ id: balId });
